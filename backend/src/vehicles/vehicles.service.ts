@@ -22,35 +22,37 @@ export class VehiclesService {
     limit: number;
     offset: number;
   }): Vehicle[] {
-    let result = vehicles
-      .filter((vehicle) => {
-        for (const manufacturer of params.manufacturers) {
-          if (manufacturer.toLocaleLowerCase() != vehicle.manufacturer.toLocaleLowerCase()) {
-            return false;
-          }
-        }
+    let result = vehicles;
 
-        for (const type of params.type) {
-          if (type.toLocaleLowerCase() != vehicle.type.toLocaleLowerCase()) {
-            return false;
-          }
+    // Apply filters
+    result = result.filter((vehicle) => {
+      for (const manufacturer of params.manufacturers) {
+        if (manufacturer.toLocaleLowerCase() != vehicle.manufacturer.toLocaleLowerCase()) {
+          return false;
         }
+      }
 
-        for (const fuelType of params.fuelType) {
-          if (fuelType.toLocaleLowerCase() != vehicle.fuelType.toLocaleLowerCase()) {
-            return false;
-          }
+      for (const type of params.type) {
+        if (type.toLocaleLowerCase() != vehicle.type.toLocaleLowerCase()) {
+          return false;
         }
+      }
 
-        if (params.year.length === 1) {
-          return vehicle.year == params.year[0];
+      for (const fuelType of params.fuelType) {
+        if (fuelType.toLocaleLowerCase() != vehicle.fuelType.toLocaleLowerCase()) {
+          return false;
         }
-        if (params.year.length >= 2) {
-          return params.year[0] <= vehicle.year && vehicle.year <= params.year[1];
-        }
+      }
 
-        return true;
-      });
+      if (params.year.length === 1) {
+        return vehicle.year == params.year[0];
+      }
+      if (params.year.length >= 2) {
+        return params.year[0] <= vehicle.year && vehicle.year <= params.year[1];
+      }
+
+      return true;
+    });
 
     // Apply sorting
     result.sort((a, b) => {
@@ -75,6 +77,7 @@ export class VehiclesService {
       return 0;
     });
 
+    // Apply sorting
     result = result.slice(
       params.offset,
       params.offset + params.limit
