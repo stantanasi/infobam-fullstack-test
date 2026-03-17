@@ -1,6 +1,8 @@
 import { Injectable } from '@nestjs/common';
+import { vehicles } from './data/vehicle.data';
 import { CreateVehicleDto } from './dto/create-vehicle.dto';
 import { UpdateVehicleDto } from './dto/update-vehicle.dto';
+import { Vehicle } from './entities/vehicle.entity';
 
 @Injectable()
 export class VehiclesService {
@@ -8,19 +10,19 @@ export class VehiclesService {
     return 'This action adds a new vehicle';
   }
 
-  findAll() {
-    return `This action returns all vehicles`;
+  findAll(): Vehicle[] {
+    return vehicles;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} vehicle`;
+  findOne(id: string): Vehicle | undefined {
+    return vehicles.find((vehicle) => vehicle.id == id);
   }
 
-  update(id: number, updateVehicleDto: UpdateVehicleDto) {
+  update(id: string, updateVehicleDto: UpdateVehicleDto) {
     return `This action updates a #${id} vehicle`;
   }
 
-  remove(id: number) {
+  remove(id: string) {
     return `This action removes a #${id} vehicle`;
   }
 }
