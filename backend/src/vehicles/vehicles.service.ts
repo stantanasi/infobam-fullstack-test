@@ -26,22 +26,19 @@ export class VehiclesService {
 
     // Apply filters
     result = result.filter((vehicle) => {
-      for (const manufacturer of params.manufacturers) {
-        if (manufacturer.toLocaleLowerCase() != vehicle.manufacturer.toLocaleLowerCase()) {
-          return false;
-        }
+      if (params.manufacturers.length > 0) {
+        const brands = params.manufacturers.map(m => m.toLowerCase());
+        if (!brands.includes(vehicle.manufacturer.toLowerCase())) return false;
       }
 
-      for (const type of params.type) {
-        if (type.toLocaleLowerCase() != vehicle.type.toLocaleLowerCase()) {
-          return false;
-        }
+      if (params.type.length > 0) {
+        const types = params.type.map(t => t.toLowerCase());
+        if (!types.includes(vehicle.type.toLowerCase())) return false;
       }
 
-      for (const fuelType of params.fuelType) {
-        if (fuelType.toLocaleLowerCase() != vehicle.fuelType.toLocaleLowerCase()) {
-          return false;
-        }
+      if (params.fuelType.length > 0) {
+        const fuels = params.fuelType.map(f => f.toLowerCase());
+        if (!fuels.includes(vehicle.fuelType.toLowerCase())) return false;
       }
 
       if (params.year.length === 1) {
