@@ -1,4 +1,5 @@
 import { getVehicle } from '@/services/vehicle.service';
+import { notFound } from 'next/navigation';
 
 export default async function Page({
   params,
@@ -9,9 +10,7 @@ export default async function Page({
   const vehicle = await getVehicle(id);
 
   if (!vehicle) {
-    return (
-      <div>Not found</div>
-    );
+    notFound();
   }
 
   return (
