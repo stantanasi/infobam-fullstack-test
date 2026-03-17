@@ -13,7 +13,8 @@ export class ManufacturersService {
   findAll() {
     return vehicles
       .map((vehicle) => vehicle.manufacturer)
-      .map((manufacturer) => new Manufacturer({ name: manufacturer }));
+      .map((manufacturer) => new Manufacturer({ name: manufacturer }))
+      .filter((manufacturer, index, array) => array.findIndex((m) => m.name == manufacturer.name) === index);
   }
 
   findOne(id: string) {
