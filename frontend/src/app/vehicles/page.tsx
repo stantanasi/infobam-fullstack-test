@@ -1,4 +1,5 @@
 import { getVehicles } from '@/services/vehicle.service';
+import Link from 'next/link';
 
 export default async function Page() {
   const vehicles = await getVehicles();
@@ -6,7 +7,9 @@ export default async function Page() {
   return (
     <ul>
       {vehicles.map((vehicle) => (
-        <li key={vehicle.id}>{vehicle.manufacturer} {vehicle.model}</li>
+        <li key={vehicle.id}>
+          <Link href={`/vehicles/${vehicle.id}`}>{vehicle.manufacturer} {vehicle.model}</Link>
+        </li>
       ))}
     </ul>
   );
