@@ -19,16 +19,16 @@ export class ManufacturersController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.manufacturersService.findOne(+id);
+    return this.manufacturersService.findOne(id);
   }
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateManufacturerDto: UpdateManufacturerDto) {
-    return this.manufacturersService.update(+id, updateManufacturerDto);
+    return this.manufacturersService.update(id, updateManufacturerDto);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.manufacturersService.remove(+id);
+    return this.manufacturersService.remove(id);
   }
 }
