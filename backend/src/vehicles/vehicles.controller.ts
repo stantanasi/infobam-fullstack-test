@@ -29,7 +29,7 @@ export class VehiclesController {
       year: query.year?.split('-').map((year) => +year) ?? [],
     };
 
-    return this.vehiclesService.findAll();
+    return this.vehiclesService.findAll(params);
   }
 
   @Get(':id')
