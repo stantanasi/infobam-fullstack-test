@@ -20,6 +20,9 @@ export class VehiclesController {
       type?: string;
       fuel_type?: string;
       year?: string;
+
+      limit?: number;
+      offset?: number;
     }
   ) {
     const params = {
@@ -27,6 +30,9 @@ export class VehiclesController {
       type: query.type?.split(',') as VehicleType[] ?? [],
       fuelType: query.fuel_type?.split(',') as FuelType[] ?? [],
       year: query.year?.split('-').map((year) => +year) ?? [],
+
+      limit: (+query.limit) || 10,
+      offset: (+query.offset) || 0,
     };
 
     return this.vehiclesService.findAll(params);

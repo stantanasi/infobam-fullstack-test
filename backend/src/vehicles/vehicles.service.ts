@@ -16,15 +16,18 @@ export class VehiclesService {
     type: VehicleType[];
     fuelType: FuelType[];
     year: number[];
+
+    limit: number;
+    offset: number;
   }): Vehicle[] {
-    const result = vehicles
+    let result = vehicles
       .filter((vehicle) => {
         for (const manufacturer of params.manufacturers) {
           if (manufacturer.toLocaleLowerCase() != vehicle.manufacturer.toLocaleLowerCase()) {
             return false;
           }
         }
-        
+
         for (const type of params.type) {
           if (type.toLocaleLowerCase() != vehicle.type.toLocaleLowerCase()) {
             return false;
@@ -46,6 +49,11 @@ export class VehiclesService {
 
         return true;
       });
+
+    result = result.slice(
+      params.offset,
+      params.offset + params.limit
+    );
 
     return result;
   }
