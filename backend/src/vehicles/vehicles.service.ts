@@ -37,6 +37,13 @@ export class VehiclesService {
           }
         }
 
+        if (params.year.length === 1) {
+          return vehicle.year == params.year[0];
+        }
+        if (params.year.length >= 2) {
+          return params.year[0] <= vehicle.year && vehicle.year <= params.year[1];
+        }
+
         return true;
       });
 
