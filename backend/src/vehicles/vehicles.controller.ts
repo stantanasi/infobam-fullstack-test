@@ -21,6 +21,8 @@ export class VehiclesController {
       fuel_type?: string;
       year?: string;
 
+      sort?: string;
+
       limit?: number;
       offset?: number;
     }
@@ -30,6 +32,8 @@ export class VehiclesController {
       type: query.type?.split(',') as VehicleType[] ?? [],
       fuelType: query.fuel_type?.split(',') as FuelType[] ?? [],
       year: query.year?.split('-').map((year) => +year) ?? [],
+
+      sort: query.sort?.split(',') ?? [],
 
       limit: (+query.limit) || 10,
       offset: (+query.offset) || 0,
