@@ -24,6 +24,15 @@ export enum VehicleType {
   ELECTRIC = "ELECTRIC",
 }
 
+export const VehicleTypeLabels: Record<VehicleType, string> = {
+  [VehicleType.SUV]: "SUV / Tout-terrain",
+  [VehicleType.SEDAN]: "Berline",
+  [VehicleType.TRUCK]: "Camion / Pick-up",
+  [VehicleType.SPORTS]: "Sportive",
+  [VehicleType.LUXURY]: "Luxe",
+  [VehicleType.ELECTRIC]: "Électrique",
+};
+
 export enum FuelType {
   GASOLINE = "GASOLINE",
   DIESEL = "DIESEL",
@@ -31,3 +40,11 @@ export enum FuelType {
   HYBRID = "HYBRID",
   PLUGIN_HYBRID = "PLUGIN_HYBRID",
 }
+
+export const FuelTypeLabels: Record<FuelType, string> = {
+  [FuelType.GASOLINE]: "Essence",
+  [FuelType.DIESEL]: "Diesel",
+  [FuelType.ELECTRIC]: "Électrique",
+  [FuelType.HYBRID]: "Hybride",
+  [FuelType.PLUGIN_HYBRID]: "Hybride rechargeable",
+};
