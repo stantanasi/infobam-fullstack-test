@@ -3,7 +3,7 @@ import { FuelType, Vehicle, VehicleType } from '@/models/vehicle.model';
 const API_URL = 'http://localhost:3000';
 
 export interface VehiclesParams {
-  manufacturers: string[];
+  manufacturer: string[];
   type: VehicleType[];
   fuel_type: FuelType[];
   year: number[];

@@ -20,7 +20,7 @@ export default async function Page(props: {
   const searchParams = await props.searchParams;
 
   const params: VehiclesParams = {
-    manufacturers: searchParams.manufacturer?.split(',') ?? [],
+    manufacturer: searchParams.manufacturer?.split(',') ?? [],
     type: searchParams.type?.split(',') as VehicleType[] ?? [],
     fuel_type: searchParams.fuel_type?.split(',') as FuelType[] ?? [],
     year: searchParams.year?.split('-').map((year) => +year) ?? [],
@@ -95,9 +95,9 @@ export default async function Page(props: {
               <li key={manufacturer.name}>
                 <Link href={getFilterLink({
                   ...params,
-                  manufacturers: params.manufacturers?.includes(manufacturer.name)
-                    ? params.manufacturers.filter(v => v !== manufacturer.name)
-                    : [...(params.manufacturers ?? []), manufacturer.name]
+                  manufacturer: params.manufacturer?.includes(manufacturer.name)
+                    ? params.manufacturer.filter(v => v !== manufacturer.name)
+                    : [...(params.manufacturer ?? []), manufacturer.name]
                 })}>
                   {manufacturer.name}
                 </Link>
