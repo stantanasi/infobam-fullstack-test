@@ -1,7 +1,7 @@
-import { Body, Controller, Delete, Get, NotFoundException, Param, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, NotFoundException, Param, Patch, Post, Query } from '@nestjs/common';
 import { CreateVehicleDto } from './dto/create-vehicle.dto';
 import { UpdateVehicleDto } from './dto/update-vehicle.dto';
-import { Vehicle } from './entities/vehicle.entity';
+import { FuelType, Vehicle, VehicleType } from './entities/vehicle.entity';
 import { VehiclesService } from './vehicles.service';
 
 @Controller('vehicles')
@@ -14,8 +14,22 @@ export class VehiclesController {
   }
 
   @Get()
-  findAll() {
-    return this.vehiclesService.findAll();
+  findAll(
+    @Query() query: {
+      manufacturer?: string;
+      type?: string;
+      fuel_type?: string;
+      year?: string;
+    }
+  ) {
+    const params = {
+      manufacturers: query.manufacturer?.split(',') ?? [],
+      type: query.type?.split(',') as VehicleType[] ?? [],
+      fuelType: query.fuel_type?.split(',') as FuelType[] ?? [],
+      year: query.year?.split('-').map((year) => +year) ?? [],
+    };
+
+    return this.vehiclesService.findAll(params);
   }
 
   @Get(':id')
