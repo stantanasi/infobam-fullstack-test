@@ -1,6 +1,7 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, NotFoundException, Param, Patch, Post } from '@nestjs/common';
 import { CreateVehicleDto } from './dto/create-vehicle.dto';
 import { UpdateVehicleDto } from './dto/update-vehicle.dto';
+import { Vehicle } from './entities/vehicle.entity';
 import { VehiclesService } from './vehicles.service';
 
 @Controller('vehicles')
@@ -18,8 +19,12 @@ export class VehiclesController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.vehiclesService.findOne(id);
+  async findOne(@Param('id') id: string): Promise<Vehicle> {
+    const vehicle = this.vehiclesService.findOne(id);
+    if (vehicle === undefined) {
+      throw new NotFoundException('Vehicle not found');
+    }
+    return vehicle;
   }
 
   @Patch(':id')
