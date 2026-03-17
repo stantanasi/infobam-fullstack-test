@@ -3,40 +3,46 @@ import { getManufacturers } from '@/services/manufacturer.service';
 import { getVehicles } from '@/services/vehicle.service';
 import Link from 'next/link';
 
+interface VehiclesParams {
+  manufacturers: string[];
+  type: VehicleType[];
+  fuel_type: FuelType[];
+  year: number[];
+  sort: string[];
+}
+
 export default async function Page(props: {
   searchParams: Promise<{
     manufacturer?: string;
     type?: string;
     fuel_type?: string;
     year?: string;
+    sort?: string;
   }>;
 }) {
   const searchParams = await props.searchParams;
 
-  const manufacturers = await getManufacturers();
-  const vehicles = await getVehicles({
+  const params: VehiclesParams = {
     manufacturers: searchParams.manufacturer?.split(',') ?? [],
     type: searchParams.type?.split(',') as VehicleType[] ?? [],
     fuel_type: searchParams.fuel_type?.split(',') as FuelType[] ?? [],
     year: searchParams.year?.split('-').map((year) => +year) ?? [],
-  });
+    sort: searchParams.sort?.split(',') ?? [],
+  };
 
-  const getFilterLink = (key: string, value: string) => {
-    const newParams = new URLSearchParams(searchParams);
+  const manufacturers = await getManufacturers();
+  const vehicles = await getVehicles(params);
 
-    const existing = newParams.get(key)?.split(',') || [];
+  const getFilterLink = (params: VehiclesParams) => {
+    const searchParams = new URLSearchParams();
 
-    const updated = existing.includes(value)
-      ? existing.filter(v => v !== value)
-      : [...existing, value];
+    for (const [key, val] of Object.entries(params ?? {})) {
+      if (Array.isArray(val) ? val.length === 0 : !val) continue;
 
-    if (updated.length > 0) {
-      newParams.set(key, updated.join(','));
-    } else {
-      newParams.delete(key);
+      searchParams.append(key, Array.isArray(val) ? val.join(',') : val.toString());
     }
 
-    return `?${newParams.toString()}`;
+    return `?${searchParams.toString()}`;
   };
 
   return (
@@ -49,7 +55,12 @@ export default async function Page(props: {
           <ul>
             {manufacturers.map((manufacturer) => (
               <li key={manufacturer.name}>
-                <Link href={getFilterLink('manufacturer', manufacturer.name)}>
+                <Link href={getFilterLink({
+                  ...params,
+                  manufacturers: params.manufacturers?.includes(manufacturer.name)
+                    ? params.manufacturers.filter(v => v !== manufacturer.name)
+                    : [...(params.manufacturers ?? []), manufacturer.name]
+                })}>
                   {manufacturer.name}
                 </Link>
               </li>
@@ -62,7 +73,12 @@ export default async function Page(props: {
           <ul>
             {Object.values(VehicleType).map((type) => (
               <li key={type}>
-                <Link href={getFilterLink('type', type)}>
+                <Link href={getFilterLink({
+                  ...params,
+                  type: params.type?.includes(type)
+                    ? params.type.filter(v => v !== type)
+                    : [...(params.type ?? []), type]
+                })}>
                   {VehicleTypeLabels[type]}
                 </Link>
               </li>
@@ -75,7 +91,12 @@ export default async function Page(props: {
           <ul>
             {Object.values(FuelType).map((fuel) => (
               <li key={fuel}>
-                <Link href={getFilterLink('fuel_type', fuel)}>
+                <Link href={getFilterLink({
+                  ...params,
+                  fuel_type: params.fuel_type?.includes(fuel)
+                    ? params.fuel_type.filter(v => v !== fuel)
+                    : [...(params.fuel_type ?? []), fuel]
+                })}>
                   {FuelTypeLabels[fuel]}
                 </Link>
               </li>
