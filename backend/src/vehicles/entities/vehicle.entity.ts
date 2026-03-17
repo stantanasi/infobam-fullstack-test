@@ -5,7 +5,7 @@ export class Vehicle {
   year: number;
   type: VehicleType;
   price: number;
-  fuelType: string;
+  fuelType: FuelType;
   transmission: string;
   mileage?: number;
   features: string[];
