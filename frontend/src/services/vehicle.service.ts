@@ -16,6 +16,8 @@ export const getVehicles = async (params?: {
   const url = new URL(`${API_URL}/vehicles`);
 
   for (const [key, val] of Object.entries(params ?? {})) {
+    if (Array.isArray(val) ? val.length === 0 : !val) continue;
+
     url.searchParams.append(key, Array.isArray(val) ? val.join(',') : val.toString());
   }
 
