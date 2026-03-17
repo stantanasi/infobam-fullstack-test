@@ -17,6 +17,8 @@ export class VehiclesService {
     fuelType: FuelType[];
     year: number[];
 
+    sort: string[],
+
     limit: number;
     offset: number;
   }): Vehicle[] {
@@ -49,6 +51,29 @@ export class VehiclesService {
 
         return true;
       });
+
+    // Apply sorting
+    result.sort((a, b) => {
+      for (const sort of params.sort) {
+        const key = sort.charAt(0) === '-' ? sort.slice(1) : sort;
+        const isDescending = sort.charAt(0) === '-';
+
+        if (key != 'year' && key != 'price') {
+          continue;
+        }
+
+        const aValue = a[key];
+        const bValue = b[key];
+
+        if (aValue < bValue) {
+          return isDescending ? 1 : -1;
+        }
+        if (aValue > bValue) {
+          return isDescending ? -1 : 1;
+        }
+      }
+      return 0;
+    });
 
     result = result.slice(
       params.offset,
