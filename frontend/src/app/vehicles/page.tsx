@@ -1,3 +1,4 @@
+import { FuelType, FuelTypeLabels, VehicleType, VehicleTypeLabels } from '@/models/vehicle.model';
 import { getManufacturers } from '@/services/manufacturer.service';
 import { getVehicles } from '@/services/vehicle.service';
 import Link from 'next/link';
@@ -9,6 +10,8 @@ export default async function Page() {
   return (
     <div>
       <div>
+        Filtres :
+
         <div>
           Marque :
           <ul>
@@ -17,9 +20,32 @@ export default async function Page() {
             ))}
           </ul>
         </div>
+
+        <div>
+          Type de voiture :
+          <ul>
+            {Object.values(VehicleType).map((type) => (
+              <li key={type}>
+                {VehicleTypeLabels[type]}
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <div>
+          Carburant :
+          <ul>
+            {Object.values(FuelType).map((type) => (
+              <li key={type}>
+                {FuelTypeLabels[type]}
+              </li>
+            ))}
+          </ul>
+        </div>
       </div>
 
       <div>
+        Voitures :
         <ul>
           {vehicles.map((vehicle) => (
             <li key={vehicle.id}>
