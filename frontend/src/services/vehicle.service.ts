@@ -2,17 +2,17 @@ import { FuelType, Vehicle, VehicleType } from '@/models/vehicle.model';
 
 const API_URL = 'http://localhost:3000';
 
-export const getVehicles = async (params?: {
-  manufacturers?: string[];
-  type?: VehicleType[];
-  fuel_type?: FuelType[];
-  year?: number[];
+export interface VehiclesParams {
+  manufacturers: string[];
+  type: VehicleType[];
+  fuel_type: FuelType[];
+  year: number[];
+  sort: string[];
+  limit: number;
+  offset: number;
+}
 
-  sort?: string[];
-
-  limit?: number;
-  offset?: number;
-}): Promise<Vehicle[]> => {
+export const getVehicles = async (params?: Partial<VehiclesParams>): Promise<Vehicle[]> => {
   const url = new URL(`${API_URL}/vehicles`);
 
   for (const [key, val] of Object.entries(params ?? {})) {
