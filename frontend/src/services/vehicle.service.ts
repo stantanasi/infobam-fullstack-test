@@ -9,5 +9,10 @@ export const getVehicles = async (): Promise<Vehicle[]> => {
 
 export const getVehicle = async (id: string): Promise<Vehicle | undefined> => {
   return fetch(`${API_URL}/vehicles/${id}`)
-    .then((res) => res.json());
+    .then((res) => {
+      if (res.ok) {
+        return res.json();
+      }
+      return undefined;
+    });
 };
