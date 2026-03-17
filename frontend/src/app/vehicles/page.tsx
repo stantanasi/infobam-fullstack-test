@@ -1,24 +1,21 @@
 import { FuelType, FuelTypeLabels, VehicleType, VehicleTypeLabels } from '@/models/vehicle.model';
 import { getManufacturers } from '@/services/manufacturer.service';
-import { getVehicles } from '@/services/vehicle.service';
+import { getVehicles, VehiclesParams } from '@/services/vehicle.service';
 import Link from 'next/link';
 
-interface VehiclesParams {
-  manufacturers: string[];
-  type: VehicleType[];
-  fuel_type: FuelType[];
-  year: number[];
-  sort: string[];
+const VEHICLES_LIMIT = 10;
+
+interface SearchParams {
+  manufacturer: string;
+  type: string;
+  fuel_type: string;
+  year: string;
+  sort: string;
+  page: string;
 }
 
 export default async function Page(props: {
-  searchParams: Promise<{
-    manufacturer?: string;
-    type?: string;
-    fuel_type?: string;
-    year?: string;
-    sort?: string;
-  }>;
+  searchParams: Promise<Partial<SearchParams>>;
 }) {
   const searchParams = await props.searchParams;
 
@@ -28,15 +25,18 @@ export default async function Page(props: {
     fuel_type: searchParams.fuel_type?.split(',') as FuelType[] ?? [],
     year: searchParams.year?.split('-').map((year) => +year) ?? [],
     sort: searchParams.sort?.split(',') ?? [],
+    limit: VEHICLES_LIMIT,
+    offset: +(searchParams.page ?? 1) * VEHICLES_LIMIT - VEHICLES_LIMIT,
   };
 
   const manufacturers = await getManufacturers();
   const vehicles = await getVehicles(params);
 
-  const getFilterLink = (params: VehiclesParams) => {
+  const getFilterLink = (params: VehiclesParams | SearchParams) => {
     const searchParams = new URLSearchParams();
 
     for (const [key, val] of Object.entries(params ?? {})) {
+      if (key === 'limit' || key === 'offset') continue;
       if (Array.isArray(val) ? val.length === 0 : !val) continue;
 
       searchParams.append(key, Array.isArray(val) ? val.join(',') : val.toString());
@@ -152,6 +152,21 @@ export default async function Page(props: {
             </li>
           ))}
         </ul>
+      </div>
+
+      <div>
+        <Link href={getFilterLink({
+          ...params,
+          page: +(searchParams.page ?? 1) <= 1 ? '' : (+(searchParams.page ?? 1) - 1).toString(),
+        })}>
+          {'<'}
+        </Link>
+        <Link href={getFilterLink({
+          ...params,
+          page: (+(searchParams.page ?? 1) + 1).toString(),
+        })}>
+          {'>'}
+        </Link>
       </div>
     </div>
   );
