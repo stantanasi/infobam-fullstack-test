@@ -48,6 +48,44 @@ export default async function Page(props: {
   return (
     <div>
       <div>
+        Trier par :
+        <ul>
+          <li>
+            <Link href={getFilterLink({
+              ...params,
+              sort: ['price'],
+            })}>
+              Prix croissant
+            </Link>
+          </li>
+          <li>
+            <Link href={getFilterLink({
+              ...params,
+              sort: ['-price'],
+            })}>
+              Prix décroissant
+            </Link>
+          </li>
+          <li>
+            <Link href={getFilterLink({
+              ...params,
+              sort: ['year'],
+            })}>
+              Année croissante
+            </Link>
+          </li>
+          <li>
+            <Link href={getFilterLink({
+              ...params,
+              sort: ['-year'],
+            })}>
+              Année décroissante
+            </Link>
+          </li>
+        </ul>
+      </div>
+
+      <div>
         Filtres :
 
         <div>
