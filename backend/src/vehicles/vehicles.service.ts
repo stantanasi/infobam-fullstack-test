@@ -7,6 +7,7 @@ import { Vehicle } from './entities/vehicle.entity';
 @Injectable()
 export class VehiclesService {
   create(createVehicleDto: CreateVehicleDto) {
+    // TODO
     return 'This action adds a new vehicle';
   }
 
@@ -19,10 +20,12 @@ export class VehiclesService {
   }
 
   update(id: string, updateVehicleDto: UpdateVehicleDto) {
+    // TODO
     return `This action updates a #${id} vehicle`;
   }
 
   remove(id: string) {
+    // TODO
     return `This action removes a #${id} vehicle`;
   }
 }
