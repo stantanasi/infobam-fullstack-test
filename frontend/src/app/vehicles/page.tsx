@@ -1,6 +1,6 @@
 import { FuelType, FuelTypeLabels, VehicleType, VehicleTypeLabels } from '@/models/vehicle.model';
 import { getManufacturers } from '@/services/manufacturer.service';
-import { getVehicles, VehiclesParams } from '@/services/vehicle.service';
+import { getVehicles } from '@/services/vehicle.service';
 import Link from 'next/link';
 
 const VEHICLES_LIMIT = 10;
@@ -19,7 +19,26 @@ export default async function Page(props: {
 }) {
   const searchParams = await props.searchParams;
 
-  const params: VehiclesParams = {
+  const sortBy = [
+    {
+      key: 'price',
+      label: 'Prix croissant',
+    },
+    {
+      key: '-price',
+      label: 'Prix décroissant',
+    },
+    {
+      key: 'year',
+      label: 'Année croissante',
+    },
+    {
+      key: '-year',
+      label: 'Année décroissante',
+    },
+  ];
+  const manufacturers = await getManufacturers();
+  const vehicles = await getVehicles({
     manufacturer: searchParams.manufacturer?.split(',') ?? [],
     type: searchParams.type?.split(',') as VehicleType[] ?? [],
     fuel_type: searchParams.fuel_type?.split(',') as FuelType[] ?? [],
@@ -27,61 +46,28 @@ export default async function Page(props: {
     sort: searchParams.sort?.split(',') ?? [],
     limit: VEHICLES_LIMIT,
     offset: +(searchParams.page ?? 1) * VEHICLES_LIMIT - VEHICLES_LIMIT,
-  };
-
-  const manufacturers = await getManufacturers();
-  const vehicles = await getVehicles(params);
-
-  const getFilterLink = (params: VehiclesParams | SearchParams) => {
-    const searchParams = new URLSearchParams();
-
-    for (const [key, val] of Object.entries(params ?? {})) {
-      if (key === 'limit' || key === 'offset') continue;
-      if (Array.isArray(val) ? val.length === 0 : !val) continue;
-
-      searchParams.append(key, Array.isArray(val) ? val.join(',') : val.toString());
-    }
-
-    return `?${searchParams.toString()}`;
-  };
+  });
 
   return (
     <div>
       <div>
         Trier par :
         <ul>
-          <li>
-            <Link href={getFilterLink({
-              ...params,
-              sort: ['price'],
-            })}>
-              Prix croissant
-            </Link>
-          </li>
-          <li>
-            <Link href={getFilterLink({
-              ...params,
-              sort: ['-price'],
-            })}>
-              Prix décroissant
-            </Link>
-          </li>
-          <li>
-            <Link href={getFilterLink({
-              ...params,
-              sort: ['year'],
-            })}>
-              Année croissante
-            </Link>
-          </li>
-          <li>
-            <Link href={getFilterLink({
-              ...params,
-              sort: ['-year'],
-            })}>
-              Année décroissante
-            </Link>
-          </li>
+          {sortBy.map((sort) => {
+            const isSelected = searchParams.sort === sort.key;
+            const newParams: Partial<SearchParams> = {
+              ...searchParams,
+              sort: sort.key,
+            };
+
+            return (
+              <li key={sort.key}>
+                <Link href={`?${new URLSearchParams(newParams).toString()}`}>
+                  {sort.label}
+                </Link>
+              </li>
+            );
+          })}
         </ul>
       </div>
 
@@ -91,54 +77,69 @@ export default async function Page(props: {
         <div>
           Marque :
           <ul>
-            {manufacturers.map((manufacturer) => (
-              <li key={manufacturer.name}>
-                <Link href={getFilterLink({
-                  ...params,
-                  manufacturer: params.manufacturer?.includes(manufacturer.name)
-                    ? params.manufacturer.filter(v => v !== manufacturer.name)
-                    : [...(params.manufacturer ?? []), manufacturer.name]
-                })}>
-                  {manufacturer.name}
-                </Link>
-              </li>
-            ))}
+            {manufacturers.map((manufacturer) => {
+              const isSelected = !!searchParams.manufacturer?.split(',').includes(manufacturer.name);
+              const newParams: Partial<SearchParams> = {
+                ...searchParams,
+                manufacturer: isSelected
+                  ? searchParams.manufacturer?.split(',').filter(v => v !== manufacturer.name).join(',')
+                  : [...(searchParams.manufacturer?.split(',') ?? []), manufacturer.name].join(','),
+              };
+
+              return (
+                <li key={manufacturer.name}>
+                  <Link href={`?${new URLSearchParams(newParams).toString()}`}>
+                    {manufacturer.name}
+                  </Link>
+                </li>
+              );
+            })}
           </ul>
         </div>
 
         <div>
           Type de voiture :
           <ul>
-            {Object.values(VehicleType).map((type) => (
-              <li key={type}>
-                <Link href={getFilterLink({
-                  ...params,
-                  type: params.type?.includes(type)
-                    ? params.type.filter(v => v !== type)
-                    : [...(params.type ?? []), type]
-                })}>
-                  {VehicleTypeLabels[type]}
-                </Link>
-              </li>
-            ))}
+            {Object.values(VehicleType).map((type) => {
+              const isSelected = !!searchParams.type?.split(',').includes(type);
+              const newParams: Partial<SearchParams> = {
+                ...searchParams,
+                type: isSelected
+                  ? searchParams.type?.split(',').filter(v => v !== type).join(',')
+                  : [...(searchParams.type?.split(',') ?? []), type].join(','),
+              };
+
+              return (
+                <li key={type}>
+                  <Link href={`?${new URLSearchParams(newParams).toString()}`}>
+                    {VehicleTypeLabels[type]}
+                  </Link>
+                </li>
+              );
+            })}
           </ul>
         </div>
 
         <div>
           Carburant :
           <ul>
-            {Object.values(FuelType).map((fuel) => (
-              <li key={fuel}>
-                <Link href={getFilterLink({
-                  ...params,
-                  fuel_type: params.fuel_type?.includes(fuel)
-                    ? params.fuel_type.filter(v => v !== fuel)
-                    : [...(params.fuel_type ?? []), fuel]
-                })}>
-                  {FuelTypeLabels[fuel]}
-                </Link>
-              </li>
-            ))}
+            {Object.values(FuelType).map((fuel) => {
+              const isSelected = !!searchParams.fuel_type?.split(',').includes(fuel);
+              const newParams: Partial<SearchParams> = {
+                ...searchParams,
+                fuel_type: isSelected
+                  ? searchParams.fuel_type?.split(',').filter(v => v !== fuel).join(',')
+                  : [...(searchParams.fuel_type?.split(',') ?? []), fuel].join(','),
+              };
+
+              return (
+                <li key={fuel}>
+                  <Link href={`?${new URLSearchParams(newParams).toString()}`}>
+                    {FuelTypeLabels[fuel]}
+                  </Link>
+                </li>
+              );
+            })}
           </ul>
         </div>
       </div>
@@ -148,23 +149,36 @@ export default async function Page(props: {
         <ul>
           {vehicles.map((vehicle) => (
             <li key={vehicle.id}>
-              <Link href={`/vehicles/${vehicle.id}`}>{vehicle.manufacturer} {vehicle.model}</Link>
+              <Link href={`/vehicles/${vehicle.id}`}>
+                {vehicle.manufacturer} {vehicle.model}
+              </Link>
             </li>
           ))}
         </ul>
       </div>
 
       <div>
-        <Link href={getFilterLink({
-          ...params,
-          page: +(searchParams.page ?? 1) <= 1 ? '' : (+(searchParams.page ?? 1) - 1).toString(),
-        })}>
+        <Link href={(() => {
+          const currentPage = +(searchParams.page ?? 1);
+          const newParams: Partial<SearchParams> = {
+            ...searchParams,
+            page: (currentPage <= 1 ? 1 : currentPage - 1).toString(),
+          };
+
+          return `?${new URLSearchParams(newParams).toString()}`;
+        })()}>
           {'<'}
         </Link>
-        <Link href={getFilterLink({
-          ...params,
-          page: (+(searchParams.page ?? 1) + 1).toString(),
-        })}>
+
+        <Link href={(() => {
+          const currentPage = +(searchParams.page ?? 1);
+          const newParams: Partial<SearchParams> = {
+            ...searchParams,
+            page: (currentPage + 1).toString(),
+          };
+
+          return `?${new URLSearchParams(newParams).toString()}`;
+        })()}>
           {'>'}
         </Link>
       </div>
