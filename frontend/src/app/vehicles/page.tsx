@@ -39,7 +39,8 @@ export default async function Page(props: {
       label: 'Année décroissante',
     },
   ];
-  const manufacturers = await getManufacturers();
+  const manufacturers = await getManufacturers()
+    .then((manufacturers) => manufacturers.sort((a, b) => a.name.localeCompare(b.name)));
   const vehicles = await getVehicles({
     manufacturer: searchParams.manufacturer?.split(',') ?? [],
     type: searchParams.type?.split(',') as VehicleType[] ?? [],
@@ -144,7 +145,7 @@ export default async function Page(props: {
           }}
         >
           <Typography sx={{ fontSize: '2rem', fontWeight: 'bold' }}>
-              Filtres
+            Filtres
           </Typography>
 
           <Box
