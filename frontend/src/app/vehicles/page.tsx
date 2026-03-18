@@ -83,10 +83,8 @@ export default async function Page(props: {
             padding: 2,
           }}
         >
-          <Typography>
-            <Box sx={{ fontSize: '2rem', fontWeight: 'bold' }}>
-              Trier par
-            </Box>
+          <Typography sx={{ fontSize: '2rem', fontWeight: 'bold' }}>
+            Trier par
           </Typography>
           <Divider />
           <Link
@@ -145,10 +143,8 @@ export default async function Page(props: {
             padding: 2,
           }}
         >
-          <Typography>
-            <Box sx={{ fontSize: '2rem', fontWeight: 'bold' }}>
+          <Typography sx={{ fontSize: '2rem', fontWeight: 'bold' }}>
               Filtres
-            </Box>
           </Typography>
 
           <Box
