@@ -24,7 +24,7 @@ export default async function Page({ params }: {
 
       <Box sx={{
         display: 'flex',
-        flexDirection: 'row',
+        flexDirection: { xs: 'column-reverse', md: 'row' },
         gap: 8,
         marginTop: 4,
       }}>
@@ -40,7 +40,6 @@ export default async function Page({ params }: {
           <Box
             component="img"
             sx={{
-              display: 'block',
               width: '100%',
               aspectRatio: '16/9',
               backgroundColor: '#eeeeee',
@@ -70,7 +69,7 @@ export default async function Page({ params }: {
                 <Chip
                   key={index}
                   label={feature}
-                  sx={{ borderRadius: '4px' }}
+                  sx={{ borderRadius: 2 }}
                 />
               ))}
             </Box>
