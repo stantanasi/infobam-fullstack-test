@@ -54,40 +54,37 @@ export default async function Page(props: {
     <Container
       sx={{
         display: 'flex',
-        flexDirection: 'row',
-        gap: '20px',
-        padding: '10px 10px',
+        flexDirection: { xs: 'column', md: 'row' },
+        gap: 8,
       }}
     >
 
       <Box
         sx={{
           display: 'flex',
-          flex: 1,
+          flex: '1 1 30%',
           flexDirection: 'column',
-          gap: '14px',
+          gap: 2,
         }}
       >
-        <Link
-          href={`?`}
-          style={{ textDecoration: 'underline' }}
-        >
-          Réinitialiser
+        <Link href="/vehicles">
+          <Typography color="primary">
+            Réinitialiser
+          </Typography>
         </Link>
-
 
         <Box
           sx={{
             display: 'flex',
             backgroundColor: '#ededed',
-            borderRadius: '8px',
+            borderRadius: 2,
             flexDirection: 'column',
-            gap: '8px',
-            padding: '8px 16px',
+            gap: 1,
+            padding: 2,
           }}
         >
           <Typography>
-            <Box sx={{ fontSize: '20px', fontWeight: 'bold' }}>
+            <Box sx={{ fontSize: '2rem', fontWeight: 'bold' }}>
               Trier par
             </Box>
           </Typography>
@@ -103,7 +100,7 @@ export default async function Page(props: {
                 alignItems: 'center',
                 display: 'flex',
                 flexDirection: 'row',
-                gap: '2px',
+                gap: 1,
               }}
             >
               <Radio checked={!searchParams.sort} sx={{ padding: 0 }} />
@@ -127,7 +124,7 @@ export default async function Page(props: {
                     alignItems: 'center',
                     display: 'flex',
                     flexDirection: 'row',
-                    gap: '2px',
+                    gap: 1,
                   }}
                 >
                   <Radio checked={isSelected} sx={{ padding: 0 }} />
@@ -142,14 +139,14 @@ export default async function Page(props: {
           sx={{
             display: 'flex',
             backgroundColor: '#ededed',
-            borderRadius: '8px',
+            borderRadius: 2,
             flexDirection: 'column',
-            gap: '14px',
-            padding: '12px',
+            gap: 2,
+            padding: 2,
           }}
         >
           <Typography>
-            <Box sx={{ fontSize: '20px', fontWeight: 'bold' }}>
+            <Box sx={{ fontSize: '2rem', fontWeight: 'bold' }}>
               Filtres
             </Box>
           </Typography>
@@ -157,11 +154,11 @@ export default async function Page(props: {
           <Box
             sx={{
               backgroundColor: '#ffffff',
-              borderRadius: '8px',
+              borderRadius: 2,
               display: 'flex',
               flexDirection: 'column',
-              gap: '8px',
-              padding: '8px 16px',
+              gap: 1,
+              padding: 2,
             }}
           >
             <Typography>
@@ -173,6 +170,8 @@ export default async function Page(props: {
                 display: 'flex',
                 gap: '2px',
                 flexDirection: 'column',
+                maxHeight: '200px',
+                overflowY: 'auto',
               }}
             >
               {manufacturers.map((manufacturer) => {
@@ -209,11 +208,11 @@ export default async function Page(props: {
           <Box
             sx={{
               backgroundColor: '#ffffff',
-              borderRadius: '8px',
+              borderRadius: 2,
               display: 'flex',
               flexDirection: 'column',
-              gap: '8px',
-              padding: '8px 16px',
+              gap: 1,
+              padding: 2,
             }}
           >
             <Typography>
@@ -225,6 +224,8 @@ export default async function Page(props: {
                 display: 'flex',
                 gap: '2px',
                 flexDirection: 'column',
+                maxHeight: '200px',
+                overflowY: 'auto',
               }}
             >
               {Object.values(VehicleType).map((type) => {
@@ -261,11 +262,11 @@ export default async function Page(props: {
           <Box
             sx={{
               backgroundColor: '#ffffff',
-              borderRadius: '8px',
+              borderRadius: 2,
               display: 'flex',
               flexDirection: 'column',
-              gap: '8px',
-              padding: '8px 16px',
+              gap: 1,
+              padding: 2,
             }}
           >
             <Typography>
@@ -277,6 +278,8 @@ export default async function Page(props: {
                 display: 'flex',
                 gap: '2px',
                 flexDirection: 'column',
+                maxHeight: '200px',
+                overflowY: 'auto',
               }}
             >
               {Object.values(FuelType).map((fuel) => {
@@ -318,19 +321,21 @@ export default async function Page(props: {
         sx={{
           display: 'flex',
           alignItems: 'center',
-          backgroundColor: '#ededed',
-          borderRadius: '8px',
-          flex: 3,
+          borderRadius: 2,
+          flex: '1 1 70%',
           flexDirection: 'column',
-          gap: '20px',
-          padding: '20px 16px',
+          gap: 2,
         }}
       >
+        <Typography variant="h1" sx={{ fontSize: '3rem' }}>
+          Voitures
+        </Typography>
+
         <Box
           sx={{
             display: 'flex',
             flexDirection: 'column',
-            gap: '8px',
+            gap: 2,
           }}
         >
           {vehicles.map((vehicle) => (
@@ -341,17 +346,21 @@ export default async function Page(props: {
               <Box
                 sx={{
                   display: 'flex',
-                  backgroundColor: '#ffffff',
-                  borderRadius: '8px',
-                  flexDirection: 'row',
+                  border: '1px solid #eee',
+                  borderRadius: 2,
+                  flexDirection: { xs: 'column', md: 'row' },
+                  overflow: 'hidden',
                 }}
               >
                 <Box
                   component="img"
                   sx={{
-                    width: '300px',
-                    height: '200px',
+                    width: { xs: '100%', sm: '260px' },
+                    height: '180px',
+                    backgroundColor: '#eee',
+                    objectFit: 'cover',
                   }}
+                  alt={`${vehicle.manufacturer} ${vehicle.model}`}
                   src={vehicle.images[0]}
                 />
 
@@ -359,45 +368,25 @@ export default async function Page(props: {
                   sx={{
                     display: 'flex',
                     flexDirection: 'column',
-                    gap: '8px',
                     justifyContent: 'space-between',
-                    padding: '20px 10px',
+                    padding: 2,
                   }}
                 >
                   <Box>
-                    <Typography>
-                      <Box sx={{ fontSize: '16px', fontWeight: 'bold' }}>
-                        {vehicle.manufacturer}
-                      </Box>
+                    <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
+                      {vehicle.manufacturer} {vehicle.model}
                     </Typography>
-
-                    <Typography>
-                      {vehicle.model}
-                    </Typography>
+                    <Box sx={{ display: 'flex', flexDirection: 'row', gap: 1 }}>
+                      <Typography>{vehicle.year}</Typography>
+                      <Typography>•</Typography>
+                      <Typography>{FuelTypeLabels[vehicle.fuelType]}</Typography>
+                      <Typography>•</Typography>
+                      <Typography>{VehicleTypeLabels[vehicle.type]}</Typography>
+                    </Box>
                   </Box>
 
-                  <Box
-                    sx={{
-                      display: 'flex',
-                      flexDirection: 'row',
-                      gap: '30px',
-                    }}
-                  >
-                    <Typography>
-                      {vehicle.year}
-                    </Typography>
-
-                    <Typography>
-                      {VehicleTypeLabels[vehicle.type]}
-                    </Typography>
-
-                    <Typography>
-                      {FuelTypeLabels[vehicle.fuelType]}
-                    </Typography>
-                  </Box>
-
-                  <Typography variant="h4">
-                    {vehicle.price} €
+                  <Typography variant="h5" color="primary" sx={{ fontWeight: 800, mt: { xs: 2, sm: 0 } }}>
+                    {vehicle.price.toLocaleString()} €
                   </Typography>
                 </Box>
               </Box>
@@ -409,29 +398,35 @@ export default async function Page(props: {
           sx={{
             display: 'flex',
             flexDirection: 'row',
-            gap: '50px',
+            alignItems: 'center',
+            gap: 2,
           }}
         >
           <Link
-            href={`?${new URLSearchParams({
-              ...searchParams,
-              page: (currentPage <= 1 ? 1 : currentPage - 1).toString(),
-            }).toString()}`}
+            href={`?${new URLSearchParams({ ...searchParams, page: (currentPage - 1).toString() }).toString()}`}
             style={{
-              color: currentPage <= 1 ? '#d4d4de' : 'inherit',
-              pointerEvents: currentPage <= 1 ? 'none' : 'unset',
+              padding: '8px 16px',
+              borderRadius: '8px',
+              border: '1px solid #ddd',
+              textDecoration: 'none',
+              color: currentPage <= 1 ? '#ccc' : '#1976d2',
+              pointerEvents: currentPage <= 1 ? 'none' : 'auto'
             }}
           >
-            {'<'}
+            Précédent
           </Link>
-
+          <Typography sx={{ fontWeight: 'bold' }}>Page {currentPage}</Typography>
           <Link
-            href={`?${new URLSearchParams({
-              ...searchParams,
-              page: (currentPage + 1).toString(),
-            }).toString()}`}
+            href={`?${new URLSearchParams({ ...searchParams, page: (currentPage + 1).toString() }).toString()}`}
+            style={{
+              padding: '8px 16px',
+              borderRadius: '8px',
+              border: '1px solid #ddd',
+              textDecoration: 'none',
+              color: '#1976d2'
+            }}
           >
-            {'>'}
+            Suivant
           </Link>
         </Box>
       </Box>
